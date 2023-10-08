@@ -23,6 +23,7 @@ typedef struct player_data
     int EXP;
     int EXP_NEEDED;
     int PA;
+    float money;
 }player_data;
 
 typedef struct player_info
@@ -37,13 +38,57 @@ typedef struct enemy_data
     int EXP_drop;
 }enemy_data;
 
+typedef struct inventory_itens
+{
+    char name[50];
+    int quantity;
+    float buy_price;
+    float sell_price;
+}inventory_itens;
+
+typedef struct item_info
+{
+    inventory_itens item_chunk;
+}item_info;
+
 
 
 
 
 //functions
 
+void text_write(char text[]);
+void set_player_name(player_info *character, player_data bloco);
+void race_choice(player_info *character);
+void class_choice(player_info *character);
+void player_id(player_info *character);
+void level_up(player_info *character);
+void enemy_generation(enemy_data enemies[], int danger_class_min, int danger_class_max);
+int alive_enemies(enemy_data enemies[]);
+void show_enemies(enemy_data enemies[]);
+int enemy_attack(enemy_data enemies[],int i);
+void battle(player_info *character, enemy_data enemies[]);
 
+
+
+
+void reset();
+void black();
+void red();
+void green();
+void yellow();
+void blue();
+void magenta();
+void cyan();
+void white();
+void bkg_black();
+void bkg_red();
+void bkg_green();
+void bkg_yellow();
+void bkg_blue();
+void bkg_magenta();
+void bkg_cyan();
+void bkg_white();
 
 
 

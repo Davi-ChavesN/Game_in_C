@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1696144256 source:i:\github\game_in_c\general_functions.c
+1696724589 source:i:\github\game_in_c\general_functions.c
 	<stdlib.h>
 	<ctype.h>
 	<string.h>
@@ -10,9 +10,9 @@
 	<locale.h>
 	"game_structure.h"
 
-1696143713 i:\github\game_in_c\game_structure.h
+1696717919 i:\github\game_in_c\game_structure.h
 
-1696144450 source:i:\github\game_in_c\main.c
+1696726525 source:i:\github\game_in_c\main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -36,7 +36,7 @@
 	<locale.h>
 	"game_structure.h"
 
-1696144435 source:i:\github\game_in_c\battle_functions.c
+1696726491 source:i:\github\game_in_c\battle_functions.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -48,7 +48,7 @@
 	<locale.h>
 	"game_structure.h"
 
-1696139406 source:i:\github\game_in_c\colors.c
+1696717278 source:i:\github\game_in_c\colors.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>

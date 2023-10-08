@@ -140,11 +140,14 @@ int enemy_attack(enemy_data enemies[],int i)
 void battle(player_info *character, enemy_data enemies[])
 {
     srand(time(NULL));
-    char text[150];
-    int flag,i,choice,fight_choice,fight_enemy;
-    int player_dmg, enemy_dmg;
+    char text[150],spell[50];
+    int flag,i,choice,fight_choice,fight_enemy,spell_choice;
+    int player_dmg,player_heal,enemy_dmg,dice;
+    int dmg_buff,def_buff;
+    int mp_cost;
 
-    choice=fight_choice=0;
+    choice=fight_choice=dice=0;
+    dmg_buff=def_buff=0;
 
     flag=alive_enemies(enemies);
     while(character->bloco.HP>0&&flag!=0)
@@ -172,6 +175,27 @@ void battle(player_info *character, enemy_data enemies[])
             printf("\n>.");
             scanf("%d",&fight_enemy);
 
+            while(enemies[fight_enemy-1].HP<=0 || fight_enemy<1 || fight_enemy>5)
+            {
+                player_id(character);
+                show_enemies(enemies);
+
+                printf("\n\n");
+                printf("=================================");
+                if(enemies[fight_enemy-1].HP<=0)
+                {
+                    printf("\nInimigo já está morto");
+                }
+                else if(fight_enemy<1 || fight_enemy>5)
+                {
+                    printf("\nEscolha inválida!");
+                }
+                printf("\nEscolha quem você quer atacar");
+                printf("\n>.");
+                scanf("%d",&fight_enemy);
+            }
+
+            action_choice:
             system("cls");
             player_id(character);
             show_enemies(enemies);
@@ -213,8 +237,35 @@ void battle(player_info *character, enemy_data enemies[])
                     player_dmg = player_dmg*(character->bloco.DEX/10);
                 }
 
+                if(dmg_buff>0)
+                {
+                    if(strcmp(character->bloco.jclass,"Guerreiro")==0)
+                    {
+                        player_dmg += 1 + rand()%6;
+                    }
+                    else if(strcmp(character->bloco.jclass,"Patrulheiro")==0)
+                    {
+                        player_dmg += 1 + rand()%6;
+                    }
+                    else if(strcmp(character->bloco.jclass,"Paladino")==0)
+                    {
+                        player_dmg += 1 + rand()%4;
+                    }
+                    dmg_buff--;
+                }
+
+                dice = 1 + rand()%20;
+
+                if(dice==20)
+                {
+                    player_dmg = player_dmg*2;
+                    yellow();
+                    printf("\nACERTO CRÍTICO\n");
+                    reset();
+                }
+
                 text_write(strcpy(text,"\nVocê ataca "));
-                green();
+                red();
                 text_write(strcpy(text,enemies[fight_enemy-1].name));
                 reset();
                 text_write(strcpy(text," e causa "));
@@ -228,7 +279,705 @@ void battle(player_info *character, enemy_data enemies[])
             }
             else if(fight_choice==2)
             {
+                if(strcmp(character->bloco.jclass,"Guerreiro")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
 
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Retomar o fôlego = 1d10");
+                    printf("\n2.Espírito guerreiro");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Retomar o fôlego");
+                        mp_cost = 20;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            player_heal = 1 + rand()%10;
+                            character->bloco.MP -= mp_cost;
+                            character->bloco.HP += player_heal;
+                            if(character->bloco.HP > character->bloco.MAX_HP)
+                            {
+                                character->bloco.HP = character->bloco.MAX_HP;
+                            }
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e restaura ");
+                            green();
+                            printf("%d",player_heal);
+                            reset();
+                            printf(" pontos de vida");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+
+
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Espírito guerreiro");
+                        mp_cost = 15;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            dmg_buff = 3;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e aumenta seu dano causado nas próximas 3 rodadas");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
+                else if(strcmp(character->bloco.jclass,"Patrulheiro")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
+
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Marca do caçador");
+                    printf("\n2.Conjurar rajada - 3d8");
+                    printf("\n3.Flecha relampejante - 4d8");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Marca do caçador");
+                        mp_cost = 15;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            dmg_buff = 3;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e aumenta seu dano causado nas próximas 3 rodadas");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Conjurar rajada");
+                        mp_cost = 24;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()% 8;
+                            player_dmg += 1 +rand()%8;
+                            player_dmg += 1 +rand()%8;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==3)
+                    {
+                        strcpy(spell,"Flecha relampejante");
+                        mp_cost = 32;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()% 8;
+                            player_dmg += 1 +rand()%8;
+                            player_dmg += 1 +rand()%8;
+                            player_dmg += 1 +rand()%8;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
+                else if(strcmp(character->bloco.jclass,"Paladino")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
+
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Curar ferimentos - 1d8");
+                    printf("\n2.Auxílio divino");
+                    printf("\n3.Escudo da fé");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Curar ferimentos");
+                        mp_cost = 16;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            player_heal = 1 +rand()% 8;
+                            character->bloco.MP -= mp_cost;
+                            character->bloco.HP += player_heal;
+                            if(character->bloco.HP > character->bloco.MAX_HP)
+                            {
+                                character->bloco.HP = character->bloco.MAX_HP;
+                            }
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e restaura ");
+                            green();
+                            printf("%d",player_heal);
+                            reset();
+                            printf(" pontos de vida");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Auxilio divino");
+                        mp_cost = 10;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            dmg_buff=3;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e aumenta seu dano causado nas próximas 3 rodadas");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==3)
+                    {
+                        strcpy(spell,"Escudo da fé");
+                        mp_cost = 20;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            def_buff=3;
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e diminui o dano tomado nas próximas 3 rodadas");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
+                else if(strcmp(character->bloco.jclass,"Mago")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
+
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Bola de fogo - 8d6");
+                    printf("\n2.Raio de gelo - 1d8");
+                    printf("\n3.Espirro ácido - 1d6");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Bola de fogo");
+                        mp_cost = 64;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()% 6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Raio de gelo");
+                        mp_cost = 12;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%8;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==3)
+                    {
+                        strcpy(spell,"Espirro ácido");
+                        mp_cost = 8;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%6;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
+                else if(strcmp(character->bloco.jclass,"Druida")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
+
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Curar ferimentos - 1d8");
+                    printf("\n2.Onda trovejante - 2d8");
+                    printf("\n3.Chicote de espinhos - 1d6");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Curar ferimentos");
+                        mp_cost = 16;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            player_heal = 1 +rand()% 8;
+                            character->bloco.MP -= mp_cost;
+                            character->bloco.HP += player_heal;
+                            if(character->bloco.HP > character->bloco.MAX_HP)
+                            {
+                                character->bloco.HP = character->bloco.MAX_HP;
+                            }
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" e restaura ");
+                            green();
+                            printf("%d",player_heal);
+                            reset();
+                            printf(" pontos de vida");
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Onda trovejante");
+                        mp_cost = 16;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%8;
+                            player_dmg += 1 +rand()%8;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==3)
+                    {
+                        strcpy(spell,"Chicote de espinhos");
+                        mp_cost = 6;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%6;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
+                else if(strcmp(character->bloco.jclass,"Bruxo")==0)
+                {
+                    player_id(character);
+                    show_enemies(enemies);
+
+                    printf("\n\n");
+                    printf("=================================");
+                    printf("\nMAGIAS");
+                    printf("\n1.Rajada de veneno - 1d12");
+                    printf("\n2.Toque vampírico - 3d6");
+                    printf("\n3.Toque arrepiante - 1d8");
+                    printf("\n0.Voltar");
+                    printf("\n>.");
+                    scanf("%d",&spell_choice);
+
+                    if(spell_choice==1)
+                    {
+                        strcpy(spell,"Rajada de veneno");
+                        mp_cost = 14;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()% 12;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==2)
+                    {
+                        strcpy(spell,"Toque vampírico");
+                        mp_cost = 28;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_dmg += 1 +rand()%6;
+                            player_heal = player_dmg/2;
+                            character->bloco.HP += player_heal;
+                            if(character->bloco.HP > character->bloco.MAX_HP)
+                            {
+                                character->bloco.HP = character->bloco.MAX_HP;
+                            }
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano e restaura ");
+                            green();
+                            printf("%d",player_heal);
+                            reset();
+                            printf(" pontos de vida a você");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==3)
+                    {
+                        strcpy(spell,"Toque arrepiante");
+                        mp_cost = 10;
+
+                        if(character->bloco.MP > mp_cost)
+                        {
+                            character->bloco.MP -= mp_cost;
+                            player_dmg = 1 +rand()%8;
+
+                            printf("\nVocê usa ");
+                            blue();
+                            printf("%s",spell);
+                            reset();
+                            printf(" para atacar ");
+                            red();
+                            printf("%s",enemies[fight_enemy-1].name);
+                            reset();
+                            printf(" e causa ");
+                            red();
+                            printf("%d",player_dmg);
+                            reset();
+                            printf(" pontos de dano");
+                            enemies[fight_enemy-1].HP -= player_dmg;
+                            printf("\n<>");
+                            getch();
+                        }
+                        else
+                        {
+                            printf("\nVocê não possui MP suficiente");
+                            printf("\n<>");
+                            getch();
+                            goto action_choice;
+                        }
+                    }
+                    else if(spell_choice==0)
+                    {
+                        goto action_choice;
+                    }
+                }
             }
 
             if(enemies[fight_enemy-1].HP<=0)
@@ -239,7 +988,7 @@ void battle(player_info *character, enemy_data enemies[])
                 printf("\n\n");
                 printf("=================================");
                 printf("\n\n");
-                green();
+                red();
                 text_write(strcpy(text,enemies[fight_enemy-1].name));
                 reset();
                 text_write(strcpy(text," foi derrotado e você ganhou "));
@@ -263,10 +1012,16 @@ void battle(player_info *character, enemy_data enemies[])
             while(i<tam)
             {
                 enemy_dmg = enemy_attack(enemies,i);
+                printf("\n%d",enemy_dmg);
+                if(def_buff>0 && enemy_dmg>0)
+                {
+                    enemy_dmg = enemy_dmg/2;
+                    printf("\n%d",enemy_dmg);
+                }
                 if(enemy_dmg>0)
                 {
                     printf("\n");
-                    green();
+                    red();
                     text_write(strcpy(text,enemies[i].name));
                     reset();
                     text_write(strcpy(text," atacou você e causou "));
@@ -279,12 +1034,16 @@ void battle(player_info *character, enemy_data enemies[])
                 else if(enemy_dmg==0)
                 {
                     printf("\n");
-                    green();
+                    red();
                     text_write(strcpy(text,enemies[i].name));
                     reset();
                     text_write(strcpy(text," errou o ataque"));
                 }
                 i++;
+            }
+            if(def_buff>0)
+            {
+                def_buff--;
             }
             flag=alive_enemies(enemies);
             printf("\n<%d>",flag);

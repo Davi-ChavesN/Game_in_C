@@ -13,12 +13,12 @@
 
 void text_write(char text[])
 {
-    int i=0;
+    int i=0,timer=0;
 
     while(text[i]!='\0')
     {
         printf("%c",text[i]);
-        Sleep(30);//30 default
+        Sleep(timer);//30 default
         i++;
     }
 }
@@ -249,7 +249,6 @@ void player_id(player_info *character)
     printf("\nHP: %d/%d\tMP: %d/%d",character->bloco.HP,character->bloco.MAX_HP,character->bloco.MP,character->bloco.MAX_MP);
     printf("\nClasse: %s",character->bloco.jclass);
     printf("\tEXP: %d/%d",character->bloco.EXP,character->bloco.EXP_NEEDED);
-    printf("\nSTR: %.0f\tDEX: %.0f\tINT: %.0f",character->bloco.STR,character->bloco.DEX,character->bloco.INT);
     printf("\n=========================================");
     printf("\n");
 }
@@ -264,6 +263,7 @@ void level_up(player_info *character)
         while(character->bloco.PA > 0)
         {
             system("cls");
+            player_id(character);
             printf("\nPA: %d",character->bloco.PA);
             printf("\n");
             printf("\n1.STR: %.0f",character->bloco.STR);
@@ -277,6 +277,7 @@ void level_up(player_info *character)
             while(opc<1||opc>6)
             {
                 system("cls");
+                player_id(character);
                 printf("\nAcho que voce esta se confundindo com as escolhas.");
                 printf("\nPA: %d",character->bloco.PA);
                 printf("\n");

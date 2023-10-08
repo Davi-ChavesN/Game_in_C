@@ -71,12 +71,16 @@ int main()
             getch();
 
             system("cls");
+            magenta();
             printf("\nVoz misteriosa: ");
+            reset();
             text_write(strcpy(text,"Olá! "));
             Sleep(800);
             text_write(strcpy(text,"Oiee!"));
             Sleep(800);
+            magenta();
             printf("\nVoz misteriosa: ");
+            reset();
             text_write(strcpy(text,"Hmm, será que este foi outro erro?"));
             printf("\n<>");
             getch();
@@ -89,52 +93,99 @@ int main()
             getch();
 
             system("cls");
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Ah, ótimo! Você acordou."));
             Sleep(800);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Muito prazer, eu sou ####. Qual é o seu nome?"));
             printf("\n[16]>.");
             fflush(stdin);
             gets(bloco.name);
-            bloco.LV=0;
+            bloco.LV=1;
 
             set_player_name(character, bloco);
             system("cls");
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Muito prazer "));
+            green();
             text_write(strcpy(text, character->bloco.name));
+            Sleep(500);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Bom, vou direto ao assunto, eu lhe transportei para outro mundo."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Impressionante, né?"));
             printf("\n");
             printf("\t1.Uau! Com certeza impressionante.\n");
-            printf("\t2.Não muito!");
+            printf("\t2.Não muito.");
             printf("\n>.");
             scanf("%d",&choice);
 
-            system("cls");
+            if(choice==1)
+            {
+                system("cls");
+                printf("\n");
+                green();
+                text_write(strcpy(text, character->bloco.name));
+                reset();
+                text_write(strcpy(text,": Uau! Com certeza impressionante."));
+            }
+            else if(choice==2)
+            {
+                system("cls");
+                printf("\n");
+                green();
+                text_write(strcpy(text, character->bloco.name));
+                reset();
+                text_write(strcpy(text,": Não muito."));
+            }
+            choice=0;
+
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Enfim, você provavelmente sabe do que se trata isso."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Ir para outro mundo, lutar contra monstros, salvar pessoas, etc."));
             Sleep(800);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Mas antes de você continuar para a parte divertida vamos terminar com a papelada."));
             Sleep(800);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Você pode escolher ir para sua aventura como uma das seguintes raças."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Humano, elfo, anão, draconato, tiefling ou autômato."));
             printf("\n<>");
             getch();
 
             race_choice(character);
+            system("cls");
+
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,character->bloco.race));
             text_write(strcpy(text," em. Uma escolha interessante."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"O que era depois disso mesmo?"));
             printf("\n<>");
             getch();
@@ -143,33 +194,55 @@ int main()
             text_write(strcpy(text,"\nO ser misterioso pega uma folha de papel do nada e começa a murmurar como se estivesse procurando algo escrito na folha."));
             printf("\n\n");
             Sleep(800);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Ah, sim!"));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Você precisa escolher uma classe também."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"As classes são as seguintes."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Guerreiro, patrulheiro, paladino, mago, druida e bruxo."));
 
             class_choice(character);
+            system("cls");
+
             player_id(character);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Ótimo, ótimo."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Agora você está pronto para sua aventura."));
             printf("\n<>");
             getch();
 
             system("cls");
             player_id(character);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Agora vou te dizer o que você precisa fazer neste mundo."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"De maneira simples, você só tem que derrotar o Soberano Sombrio que tomou conta deste mundo."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Nada muito complicado. Eu mesmo faria isso, mas, infelizmente não posso interferir no mundo físico diretamente."));
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Agora que você sabe o que precisa ser feito você tem alguma dúvida?"));
 
             printf("\n");
@@ -179,18 +252,49 @@ int main()
             printf("\n>.");
             scanf("%d",&choice);
 
-            if(choice==2)
+            if(choice==1)
             {
+                system("cls");
+                player_id(character);
+                printf("\n");
+                green();
+                text_write(strcpy(text, character->bloco.name));
+                reset();
+                text_write(strcpy(text,": Sem dúvidas."));
+            }
+            else if(choice==2)
+            {
+                system("cls");
+                player_id(character);
+                printf("\n");
+                green();
+                text_write(strcpy(text, character->bloco.name));
+                reset();
+                text_write(strcpy(text,": Por que eu?"));
+                cyan();
                 printf("\nSer misterioso: ");
+                reset();
                 text_write(strcpy(text,"Err, porque você é especial. Você possui uma energia diferente. Um potencial latente."));
             }
             else if(choice==3)
             {
+                system("cls");
+                player_id(character);
+                printf("\n");
+                green();
+                text_write(strcpy(text, character->bloco.name));
+                reset();
+                text_write(strcpy(text,": Posso ir pra casa?"));
+                magenta();
                 printf("\nSer misterioso: ");
+                reset();
                 text_write(strcpy(text,"Assim que você completar essa minha missão eu te envio de volta."));
             }
 
+            Sleep(500);
+            magenta();
             printf("\nSer misterioso: ");
+            reset();
             text_write(strcpy(text,"Ótimo, agora que terminamos vou te enviar para uma vila que está sendo atacada por alguns monstros, comece ajudando a defender esta vila."));
             printf("\n<>");
             getch();
@@ -204,7 +308,7 @@ int main()
             getch();
 
             system("cls");
-            enemy_generation(enemies,2,1);
+            enemy_generation(enemies,1,5);//2,1
             battle(character, enemies);
             level_up(character);
 
