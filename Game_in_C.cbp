@@ -37,11 +37,17 @@
 		<Unit filename="colors.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="dice_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="game_structure.h" />
 		<Unit filename="general_functions.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="notes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

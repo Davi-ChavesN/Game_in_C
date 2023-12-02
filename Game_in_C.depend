@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1696724589 source:i:\github\game_in_c\general_functions.c
+1701289097 source:i:\github\game_in_c\general_functions.c
 	<stdlib.h>
 	<ctype.h>
 	<string.h>
@@ -10,9 +10,9 @@
 	<locale.h>
 	"game_structure.h"
 
-1696717919 i:\github\game_in_c\game_structure.h
+1700851652 i:\github\game_in_c\game_structure.h
 
-1696726525 source:i:\github\game_in_c\main.c
+1701289734 source:i:\github\game_in_c\main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -36,7 +36,7 @@
 	<locale.h>
 	"game_structure.h"
 
-1696726491 source:i:\github\game_in_c\battle_functions.c
+1701287672 source:i:\github\game_in_c\battle_functions.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -48,7 +48,31 @@
 	<locale.h>
 	"game_structure.h"
 
-1696717278 source:i:\github\game_in_c\colors.c
+1700853217 source:i:\github\game_in_c\colors.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<conio.h>
+	<windows.h>
+	<locale.h>
+	"game_structure.h"
+
+1700853225 source:i:\github\game_in_c\dice_functions.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<conio.h>
+	<windows.h>
+	<locale.h>
+	"game_structure.h"
+
+1701281165 source:i:\github\game_in_c\notes.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>

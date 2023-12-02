@@ -9,64 +9,96 @@
 #include <locale.h>
 #include "game_structure.h"
 
-#define tam 5
+#define tam 10
 
 
-void enemy_generation(enemy_data enemies[], int danger_class_min, int danger_class_max)
+void enemy_generation(enemy_data enemies[], char enemy_list[])
 {
-    srand(time(NULL));
-    int i,dice,max,min;
-    min = danger_class_min;
-    max = danger_class_max;
-    dice=i=0;
+    int i;
 
     /*
         Danger class - Enemy
-            1           Slime
-            2           Goblin
-            3           Bandit
-            4           Specter
-            5           Orc
+            1           Slime - X
+            2           Goblin - pronto
+            3           Bandit - pronto
+            4           Specter - pronto
+            5           Orc - pronto
     */
 
-    while(i<tam)
+    i=0;
+    while(enemy_list[i]!='\0')
     {
-        dice = min + rand()% max;
-        printf("%d",dice);
-        if(dice==1)
+
+        if(enemy_list[i]=='0')
+        {
+            strcpy(enemies[i].name,"");
+            enemies[i].HP = 0;
+            enemies[i].CA = 0;
+            enemies[i].EXP_drop = 0;
+            strcpy(enemies[i].weapon1,"");
+            strcpy(enemies[i].weapon2,"");
+        }
+        if(enemy_list[i]=='1')
         {
 
-            strcpy(enemies[i].name,"Slime");
-            enemies[i].HP = 7 + rand()%9;
-            enemies[i].EXP_drop = 3 + rand()%5;
+//            strcpy(enemies[i].name,"Slime");
+//            enemies[i].HP = 7 + rand()%9;
+//            enemies[i].EXP_drop = 3 + rand()%5;
         }
-        if(dice==2)
+        if(enemy_list[i]=='2')
         {
             strcpy(enemies[i].name,"Goblin");
-            enemies[i].HP = 10 + rand()%11;
-            enemies[i].EXP_drop = 7 + rand()%10;
+            enemies[i].HP = roll_dice(2,6);
+            enemies[i].CA = roll_dice(1,15);
+            enemies[i].EXP_drop = roll_dice(1,50);
+            strcpy(enemies[i].weapon1,"Cimitarra");
+            strcpy(enemies[i].weapon2,"Arco Curto");
         }
-        if(dice==3)
+        if(enemy_list[i]=='3')
         {
             strcpy(enemies[i].name,"Bandido");
-            enemies[i].HP = 12 + rand()%13;
-            enemies[i].EXP_drop = 7 + rand()%10;
+            enemies[i].HP = roll_dice(2,8);
+            enemies[i].CA = roll_dice(1,12);
+            enemies[i].EXP_drop = roll_dice(1,25);
+            strcpy(enemies[i].weapon1,"Cimitarra");
+            strcpy(enemies[i].weapon2,"Besta Leve");
         }
-        if(dice==4)
+        if(enemy_list[i]=='4')
         {
             strcpy(enemies[i].name,"Espectro");
-            enemies[i].HP = 7 + rand()%15;
-            enemies[i].EXP_drop = 9 + rand()%12;
+            enemies[i].HP = roll_dice(5,8);
+            enemies[i].CA = roll_dice(1,13);
+            enemies[i].EXP_drop = roll_dice(1,100);
+            strcpy(enemies[i].weapon1,"Drenar Vida");
+            strcpy(enemies[i].weapon2,"Drenar Vida");
         }
-        if(dice==5)
+        if(enemy_list[i]=='5')
         {
             strcpy(enemies[i].name,"Orc");
-            enemies[i].HP = 20 + rand()%11;
-            enemies[i].EXP_drop = 12 + rand()%14;
+            enemies[i].HP = roll_dice(2,8);
+            enemies[i].CA = roll_dice(1,13);
+            enemies[i].EXP_drop = roll_dice(1,100);
+            strcpy(enemies[i].weapon1,"Machado Grande");
+            strcpy(enemies[i].weapon2,"Azagaia");
+        }
+        if(enemy_list[i]=='G')
+        {
+            strcpy(enemies[i].name,"Guardião da Sombra");
+            enemies[i].HP = 50;
+            enemies[i].CA = 12;
+            enemies[i].EXP_drop = 500;
+            strcpy(enemies[i].weapon1,"Malho");
+            strcpy(enemies[i].weapon2,"Martelo Leve");
+        }
+
+        system("cls");
+        if(enemy_list[i]!='0')
+        {
+            loadingBar();
         }
         i++;
     }
-    getch();
+    //getch();
 }
 
 int alive_enemies(enemy_data enemies[])
@@ -90,61 +122,37 @@ int alive_enemies(enemy_data enemies[])
 void show_enemies(enemy_data enemies[])
 {
     int i=0;
+    int n=0;
     while(i<tam)
     {
-        printf("\n%d. %s\t HP: ",i+1,enemies[i].name);
-        if(enemies[i].HP>0)
+        if(strcmp(enemies[i].name,"")!=0)
         {
-            printf("%d",enemies[i].HP);
-        }
-        else
-        {
-            printf("0 - Derrotado");
+            printf("\n%d. ",n+1);
+            red();
+            printf("%s",enemies[i].name);
+            reset();
+            n++;
+
+            if(enemies[i].HP>0)
+            {
+
+            }
+            else
+            {
+                printf(" - Derrotado");
+            }
         }
         i++;
     }
 }
 
-int enemy_attack(enemy_data enemies[],int i)
-{
-    srand(time(NULL));
-    int dmg=-1;
-
-    if(enemies[i].HP>0)
-    {
-        if(strcmp(enemies[i].name,"Slime")==0)
-        {
-            dmg = rand()% 5;
-        }
-        if(strcmp(enemies[i].name,"Goblin")==0)
-        {
-            dmg = rand()% 7;
-        }
-        if(strcmp(enemies[i].name,"Bandido")==0)
-        {
-            dmg = rand()% 7;
-        }
-        if(strcmp(enemies[i].name,"Espectro")==0)
-        {
-            dmg = rand()% 9;
-        }
-        if(strcmp(enemies[i].name,"Orc")==0)
-        {
-            dmg = rand()% 13;
-        }
-    }
-
-    return dmg;
-}
-
 void battle(player_info *character, enemy_data enemies[])
 {
-    srand(time(NULL));
-    char text[150],spell[50];
-    int flag,i,choice,fight_choice,fight_enemy,spell_choice;
+    char text[150],spell[50],weapon[25];
+    int flag,i,choice,fight_choice,fight_enemy,spell_choice,weapon_choice,bp_choice;
     int player_dmg,player_heal,enemy_dmg,dice;
     int dmg_buff,def_buff;
-    int mp_cost;
+    int mp_cost,rng;
 
     choice=fight_choice=dice=0;
     dmg_buff=def_buff=0;
@@ -160,7 +168,7 @@ void battle(player_info *character, enemy_data enemies[])
         printf("=================================");
         printf("\nEscolha sua ação");
         printf("\n1.Lutar");
-        printf("\n2.Fugir");
+        printf("\n2.Mochila");
         printf("\n>.");
         scanf("%d",&choice);
 
@@ -175,7 +183,7 @@ void battle(player_info *character, enemy_data enemies[])
             printf("\n>.");
             scanf("%d",&fight_enemy);
 
-            while(enemies[fight_enemy-1].HP<=0 || fight_enemy<1 || fight_enemy>5)
+            while(enemies[fight_enemy-1].HP<=0 || fight_enemy<1 || fight_enemy>10)
             {
                 player_id(character);
                 show_enemies(enemies);
@@ -186,7 +194,7 @@ void battle(player_info *character, enemy_data enemies[])
                 {
                     printf("\nInimigo já está morto");
                 }
-                else if(fight_enemy<1 || fight_enemy>5)
+                else if(fight_enemy<1 || fight_enemy>10)
                 {
                     printf("\nEscolha inválida!");
                 }
@@ -211,50 +219,52 @@ void battle(player_info *character, enemy_data enemies[])
 
             if(fight_choice==1)
             {
-                player_dmg = 5 + rand()% 6;
-                if(strcmp(character->bloco.jclass,"Guerreiro")==0)
+                system("cls");
+                player_id(character);
+                show_enemies(enemies);
+
+                printf("\n\n");
+                printf("=================================");
+                printf("\nEscolha sua ação");
+                printf("\n1.%s",character->bloco.equiped_weapon1);
+                if(strcmp(character->bloco.equiped_weapon2,"")!=0)
                 {
-                    player_dmg = player_dmg*(character->bloco.STR/10);
+                    printf("\n2.%s",character->bloco.equiped_weapon2);
                 }
-                else if(strcmp(character->bloco.jclass,"Patrulheiro")==0)
+                printf("\n>.");
+                scanf("%d",&weapon_choice);
+
+                if(weapon_choice==1)
                 {
-                    player_dmg = player_dmg*(character->bloco.DEX/10);
+                    strcpy(weapon,character->bloco.equiped_weapon1);
+                    printf("%s",weapon);
+                    getch();
                 }
-                else if(strcmp(character->bloco.jclass,"Paladino")==0)
+                else if(weapon_choice==2)
                 {
-                    player_dmg = player_dmg*(character->bloco.STR/10);
+                    strcpy(weapon,character->bloco.equiped_weapon2);
                 }
-                else if(strcmp(character->bloco.jclass,"Mago")==0)
-                {
-                    player_dmg = player_dmg*(character->bloco.STR/10);
-                }
-                else if(strcmp(character->bloco.jclass,"Druida")==0)
-                {
-                    player_dmg = player_dmg*(character->bloco.DEX/10);
-                }
-                else if(strcmp(character->bloco.jclass,"Bruxo")==0)
-                {
-                    player_dmg = player_dmg*(character->bloco.DEX/10);
-                }
+
+                player_dmg = weapons_dmg(weapon);
 
                 if(dmg_buff>0)
                 {
-                    if(strcmp(character->bloco.jclass,"Guerreiro")==0)
+                    if(strcmp(character->bloco.jclass,"Bárbaro")==0)
                     {
-                        player_dmg += 1 + rand()%6;
+                        player_dmg += roll_dice(1,6);
                     }
                     else if(strcmp(character->bloco.jclass,"Patrulheiro")==0)
                     {
-                        player_dmg += 1 + rand()%6;
+                        player_dmg += roll_dice(1,6);
                     }
                     else if(strcmp(character->bloco.jclass,"Paladino")==0)
                     {
-                        player_dmg += 1 + rand()%4;
+                        player_dmg += roll_dice(1,4);
                     }
                     dmg_buff--;
                 }
 
-                dice = 1 + rand()%20;
+                dice = roll_dice(1,20);
 
                 if(dice==20)
                 {
@@ -264,22 +274,30 @@ void battle(player_info *character, enemy_data enemies[])
                     reset();
                 }
 
-                text_write(strcpy(text,"\nVocê ataca "));
-                red();
-                text_write(strcpy(text,enemies[fight_enemy-1].name));
-                reset();
-                text_write(strcpy(text," e causa "));
-                red();
-                printf("%d",player_dmg);
-                reset();
-                text_write(strcpy(text," de dano"));
-                enemies[fight_enemy-1].HP -= player_dmg;
+                //arrumar d20 e CA dos inimigos
+                if(dice>=enemies[fight_enemy-1].CA)
+                {
+                    text_write(strcpy(text,"\nVocê ataca "));
+                    red();
+                    text_write(strcpy(text,enemies[fight_enemy-1].name));
+                    reset();
+                    text_write(strcpy(text," e causa "));
+                    red();
+                    printf("%d",player_dmg);
+                    reset();
+                    text_write(strcpy(text," de dano"));
+                    enemies[fight_enemy-1].HP -= player_dmg;
+                }
+                else
+                {
+                    text_write(strcpy(text,"\nVocê errou seu ataque "));
+                }
                 printf("\n<>");
                 getch();
             }
             else if(fight_choice==2)
             {
-                if(strcmp(character->bloco.jclass,"Guerreiro")==0)
+                if(strcmp(character->bloco.jclass,"Bárbaro")==0)
                 {
                     player_id(character);
                     show_enemies(enemies);
@@ -1011,33 +1029,48 @@ void battle(player_info *character, enemy_data enemies[])
             i=0;
             while(i<tam)
             {
-                enemy_dmg = enemy_attack(enemies,i);
-                printf("\n%d",enemy_dmg);
-                if(def_buff>0 && enemy_dmg>0)
+                if(enemies[i].HP>0)
                 {
-                    enemy_dmg = enemy_dmg/2;
-                    printf("\n%d",enemy_dmg);
-                }
-                if(enemy_dmg>0)
-                {
-                    printf("\n");
-                    red();
-                    text_write(strcpy(text,enemies[i].name));
-                    reset();
-                    text_write(strcpy(text," atacou você e causou "));
-                    red();
-                    printf("%d ",enemy_dmg);
-                    reset();
-                    text_write(strcpy(text,"de dano"));
-                    character->bloco.HP -= enemy_dmg;
-                }
-                else if(enemy_dmg==0)
-                {
-                    printf("\n");
-                    red();
-                    text_write(strcpy(text,enemies[i].name));
-                    reset();
-                    text_write(strcpy(text," errou o ataque"));
+                    rng = 1 + rand()%2;
+
+                    if(rng==1)
+                    {
+                        strcpy(weapon,enemies[i].weapon1);
+                    }
+                    else
+                    {
+                        strcpy(weapon,enemies[i].weapon2);
+                    }
+                    enemy_dmg = weapons_dmg(weapon);
+
+                    dice = roll_dice(1,20);
+
+                    if(dice>=character->bloco.CA)
+                    {
+                        if(def_buff>0 && enemy_dmg>0)
+                        {
+                            enemy_dmg = enemy_dmg/2;
+                        }
+                        printf("\n");
+                        red();
+                        text_write(strcpy(text,enemies[i].name));
+                        reset();
+                        text_write(strcpy(text," atacou você e causou "));
+                        red();
+                        printf("%d ",enemy_dmg);
+                        reset();
+                        text_write(strcpy(text,"de dano"));
+                        character->bloco.HP -= enemy_dmg;
+                    }
+                    else if(dice<character->bloco.CA)
+                    {
+                        printf("\n");
+                        red();
+                        text_write(strcpy(text,enemies[i].name));
+                        reset();
+                        text_write(strcpy(text," errou o ataque"));
+                    }
+                    Sleep(1000);
                 }
                 i++;
             }
@@ -1051,10 +1084,42 @@ void battle(player_info *character, enemy_data enemies[])
         }
         if(choice==2)
         {
-            printf("\nVocê fugiu!");
-            printf("\n<>");
-            getch();
-            break;
+            system("cls");
+            player_id(character);
+            show_enemies(enemies);
+
+            printf("\n\n");
+            printf("=================================");
+            printf("\nEscolha sua ação");
+            printf("\n1.Poção de vida");
+            printf("\n2.Poção de mana");
+            printf("\n>.");
+            scanf("%d",&bp_choice);
+
+            if(bp_choice==1)
+            {
+                if(character->bloco.HP + 50 > character->bloco.MAX_HP)
+                {
+                    character->bloco.HP = character->bloco.MAX_HP;
+                }
+                else
+                {
+                    character->bloco.HP += 50;
+                }
+                printf("\nVocê usa uma poção de vida");
+            }
+            else if(bp_choice==2)
+            {
+                if(character->bloco.MP + 50 > character->bloco.MAX_MP)
+                {
+                    character->bloco.MP = character->bloco.MAX_MP;
+                }
+                else
+                {
+                    character->bloco.MP += 50;
+                }
+                printf("\nVocê usa uma poção de mana");
+            }
         }
     }
     if(character->bloco.HP<=0)
@@ -1062,5 +1127,6 @@ void battle(player_info *character, enemy_data enemies[])
         red();
         text_write(strcpy(text,"Você morreu!"));
         reset();
+        getch();
     }
 }

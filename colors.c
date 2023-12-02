@@ -9,7 +9,7 @@
 #include <locale.h>
 #include "game_structure.h"
 
-#define tam 5
+#define tam 10
 
 
 //text-colors

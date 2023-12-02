@@ -15,6 +15,7 @@ typedef struct player_data
     float INT;
     float WIS;
     float CHA;
+    int CA;
     int LV;
     int HP;
     int MAX_HP;
@@ -24,6 +25,9 @@ typedef struct player_data
     int EXP_NEEDED;
     int PA;
     float money;
+    char equiped_weapon1[25];
+    char equiped_weapon2[25];
+    char equiped_armor[25];
 }player_data;
 
 typedef struct player_info
@@ -36,6 +40,9 @@ typedef struct enemy_data
     char name[20];
     int HP;
     int EXP_drop;
+    int CA;
+    char weapon1[25];
+    char weapon2[25];
 }enemy_data;
 
 typedef struct inventory_itens
@@ -63,7 +70,7 @@ void race_choice(player_info *character);
 void class_choice(player_info *character);
 void player_id(player_info *character);
 void level_up(player_info *character);
-void enemy_generation(enemy_data enemies[], int danger_class_min, int danger_class_max);
+void enemy_generation(enemy_data enemies[], char enemy_list[]);
 int alive_enemies(enemy_data enemies[]);
 void show_enemies(enemy_data enemies[]);
 int enemy_attack(enemy_data enemies[],int i);
